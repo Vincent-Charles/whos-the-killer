@@ -10,13 +10,11 @@ type RoomLobbyProps = {
   isCreator: boolean;
 };
 
-const demoPlayers = ["Vincent", "Robert", "Aman", "Raghav", "Suzil", "John"];
-
 export function RoomLobby({ code, playerName, isCreator }: RoomLobbyProps) {
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
-  const players = Array.from(new Set([playerName, ...demoPlayers])).slice(0, 6);
-  const readyCount = ready ? 5 : 4;
+  const players = [playerName];
+  const readyCount = ready ? 1 : 0;
 
   async function copyLink() {
     const link = `${window.location.origin}/join/${code}`;
@@ -72,10 +70,12 @@ export function RoomLobby({ code, playerName, isCreator }: RoomLobbyProps) {
           <div className="rounded-lg bg-white/10 p-3">
             <div className="flex items-center justify-between text-sm font-black uppercase">
               <span>Ready</span>
-              <span>{readyCount} / 6</span>
+              <span>
+                {readyCount} / {players.length}
+              </span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full bg-red-500" style={{ width: `${(readyCount / 6) * 100}%` }} />
+              <div className="h-full bg-red-500" style={{ width: `${(readyCount / players.length) * 100}%` }} />
             </div>
           </div>
 

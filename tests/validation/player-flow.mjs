@@ -48,6 +48,8 @@ async function main() {
     hasShare: await page.getByRole("button", { name: "Share" }).isVisible(),
     hasReady: await page.getByRole("button", { name: "Ready" }).isVisible(),
     hasStartGame: await page.getByText("Start Game").isVisible(),
+    hasOnlyCurrentPlayer: (await page.locator("section.mt-4.grid.gap-2 > div").count()) === 1,
+    noDemoPlayers: (await page.getByText("Robert").count()) === 0 && (await page.getByText("Aman").count()) === 0,
     leaksModerator: await page.getByText("Moderator").count(),
     leaksRoleBoard: await page.getByText("Raghav: Killer").count(),
     horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth),
@@ -65,7 +67,7 @@ async function main() {
   results.push({
     route: "/room/K7R4Q creator",
     readyToggled: await page.getByRole("button", { name: "Not Ready Yet" }).isVisible(),
-    readyCount: await page.getByText("5 / 6").isVisible(),
+    readyCount: await page.getByText("1 / 1").isVisible(),
   });
 
   await page.getByText("Start Game").click();
@@ -100,6 +102,8 @@ async function main() {
     hasReady: await page.getByRole("button", { name: "Ready" }).isVisible(),
     noStartGameForJoiner: (await page.getByText("Start Game").count()) === 0,
     appRunsGame: await page.getByText("Waiting for the app to start the game.").isVisible(),
+    hasOnlyCurrentPlayer: (await page.locator("section.mt-4.grid.gap-2 > div").count()) === 1,
+    noDemoPlayers: (await page.getByText("Vincent").count()) === 0 && (await page.getByText("Aman").count()) === 0,
     leaksModerator: await page.getByText("Moderator").count(),
     leaksRoleBoard: await page.getByText("Raghav: Killer").count(),
     horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth),
@@ -109,7 +113,7 @@ async function main() {
   results.push({
     route: "/room/K7R4Q joiner",
     readyToggled: await page.getByRole("button", { name: "Not Ready Yet" }).isVisible(),
-    readyCount: await page.getByText("5 / 6").isVisible(),
+    readyCount: await page.getByText("1 / 1").isVisible(),
   });
 
   await page.goto(`${baseUrl}/demo/full-round`, { waitUntil: "load" });
