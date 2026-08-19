@@ -5,7 +5,7 @@ A no-host multiplayer social deduction party game inspired by Mafia. The applica
 ## Stack
 
 - Next.js App Router, React, TypeScript, Tailwind CSS
-- Supabase Auth, Postgres, Row Level Security, Realtime
+- Anonymous short-lived room storage with Redis/KV-compatible REST
 - Vitest and Testing Library for automated tests
 - Vercel for deployment
 
@@ -27,15 +27,25 @@ Install Node.js 24 LTS or newer from `https://nodejs.org/`.
 npm install
 ```
 
-## Supabase Setup
+## Shared Room Storage
 
-1. Create a Supabase project.
-2. Open Authentication, then Providers.
-3. Enable anonymous sign-ins.
-4. Open SQL Editor.
-5. Run `supabase/migrations/0001_initial_schema.sql`.
-6. Copy the project URL, anon key, and service role key.
-7. Create `.env.local` from `.env.example`.
+Players do not need accounts. The app creates anonymous room codes and stores lobby state for a few hours.
+
+Use a free Redis/KV-compatible REST store such as Vercel KV or Upstash Redis, then add these env vars:
+
+```bash
+KV_REST_API_URL=...
+KV_REST_API_TOKEN=...
+```
+
+The app also accepts Upstash's native names:
+
+```bash
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+```
+
+For local development without env vars, the app uses temporary in-memory rooms. That is fine for one-machine testing, but not reliable for friends joining from phones.
 
 ```bash
 cp .env.example .env.local
@@ -71,10 +81,10 @@ npm run build
 
 ## Deployment
 
-Deploy the Next.js app to Vercel and the database/auth layer to Supabase. See `DEPLOYMENT.md` for exact steps.
+Deploy the Next.js app to Vercel and add Redis/KV REST env vars for reliable shared rooms.
 
 ## Current Limitations
 
 - The first implementation contains the secure domain engine, schema, RLS, PWA shell, demo flow, and tests.
-- Full Supabase server actions/RPC functions for every room operation are still the next implementation slice.
-- Manual browser security testing requires a live Supabase project and deployed or local environment.
+- The lobby is anonymous and short-lived; there are no player accounts or saved stats.
+- Full gameplay persistence beyond the lobby is still the next implementation slice.

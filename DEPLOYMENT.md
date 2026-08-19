@@ -1,28 +1,28 @@
 # Deployment Guide
 
-## A. Create A Supabase Account
+## A. Create Free Room Storage
 
-Go to `https://supabase.com`, create an account, and sign in.
+Create a free Redis/KV-compatible REST store. Vercel KV or Upstash Redis are the intended fit for this app.
 
-## B. Create A Supabase Project
+## B. Copy Storage Values
 
-Create a new project. Choose a region near your players and save the database password securely.
+Copy the REST URL and REST token.
 
-## C. Enable Anonymous Authentication
+## C. Configure Vercel Environment Variables
 
-Open Authentication, then Providers, then enable anonymous sign-ins.
+Add one of these env var pairs in Vercel Project Settings:
 
-## D. Apply Database Migrations
+```bash
+KV_REST_API_URL=...
+KV_REST_API_TOKEN=...
+```
 
-Open SQL Editor and run `supabase/migrations/0001_initial_schema.sql`.
+or:
 
-## E. Configure Realtime
-
-The migration creates a realtime publication for rooms, players, public events, and votes. Confirm Realtime is enabled in the Supabase project settings.
-
-## F. Find Required Supabase Values
-
-Open Project Settings, then API. Copy the Project URL, anon public key, and service_role key.
+```bash
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+```
 
 ## G. Create Local `.env.local`
 
@@ -63,7 +63,7 @@ Select the repository and choose the Next.js preset.
 
 ## M. Configure Environment Variables In Vercel
 
-Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`, and `NEXT_PUBLIC_DEMO_MODE=false`.
+Add `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `NEXT_PUBLIC_SITE_URL`, and `NEXT_PUBLIC_DEMO_MODE=false`.
 
 ## N. Deploy
 
@@ -75,7 +75,7 @@ Open the Vercel URL on a phone.
 
 ## P. Create A Room
 
-Use CREATE GAME once the full server-action slice is connected to Supabase.
+Use CREATE GAME, enter your name, then share the join link.
 
 ## Q. Join From A Second Device
 
@@ -112,6 +112,6 @@ Open Vercel Deployments, select a previous successful deployment, then Promote t
 ## X. Troubleshoot Common Deployment Problems
 
 - Build fails: run `npm run typecheck` and `npm run test` locally.
-- Auth fails: confirm anonymous auth is enabled.
-- RLS blocks expected reads: confirm the player is joined with the current anonymous user id.
-- Realtime is silent: confirm the publication exists and tables are enabled for Realtime.
+- Rooms show `TEMP`: Redis/KV env vars are missing or invalid.
+- Friend cannot join: confirm the room code exists and the Redis/KV REST token is correct.
+- Lobby is stale: refresh both phones; rooms expire automatically after a few hours.

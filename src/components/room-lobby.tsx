@@ -22,7 +22,7 @@ type LobbyPlayer = {
 type LobbyRoom = {
   code: string;
   isCreator: boolean;
-  storage: "supabase" | "temporary";
+  storage: "redis" | "temporary";
   players: LobbyPlayer[];
 };
 
@@ -114,7 +114,7 @@ export function RoomLobby({ code, clientId, fallbackPlayerName, playerId }: Room
             <h1 className="font-mono text-4xl font-black">{code}</h1>
           </div>
           <div className="rounded-lg bg-emerald-100 px-3 py-2 text-xs font-black uppercase text-emerald-950">
-            {room?.storage === "temporary" ? "Temp" : "Synced"}
+            {room?.storage === "temporary" ? "Temp" : "Live"}
           </div>
         </header>
 
@@ -136,7 +136,7 @@ export function RoomLobby({ code, clientId, fallbackPlayerName, playerId }: Room
         {error ? <p className="mt-4 rounded-lg border border-red-400/40 bg-red-950/40 p-3 text-sm font-bold text-red-100">{error}</p> : null}
         {room?.storage === "temporary" ? (
           <p className="mt-4 rounded-lg border border-amber-300/40 bg-amber-950/30 p-3 text-sm font-bold text-amber-100">
-            Temporary room storage is active. Configure Supabase in Vercel for reliable friend invites.
+            Temporary room storage is active. Add free Redis/KV env vars in Vercel for reliable friend invites.
           </p>
         ) : null}
 
