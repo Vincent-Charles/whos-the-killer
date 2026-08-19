@@ -2,23 +2,40 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-
-const demoCode = "K7R4Q";
+import { getOrCreateClientId } from "@/lib/client-id";
 
 export function CreateGameForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const playerName = name.trim();
     if (!playerName) {
       setError("Enter your name first.");
       return;
     }
-    const params = new URLSearchParams({ player: playerName, creator: "1" });
-    router.push(`/room/${demoCode}?${params.toString()}`);
+
+    setPending(true);
+    setError("");
+    try {
+      const clientId = getOrCreateClientId();
+      const response = await fetch("/api/rooms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ displayName: playerName, clientId }),
+      });
+      const payload = (await response.json()) as { room?: { code: string; players: { id: string }[] }; error?: string };
+      if (!response.ok || !payload.room) throw new Error(payload.error ?? "Could not create room.");
+      const player = payload.room.players[0];
+      const params = new URLSearchParams({ player: playerName, playerId: player.id, clientId });
+      router.push(`/room/${payload.room.code}?${params.toString()}`);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Could not create room.");
+      setPending(false);
+    }
   }
 
   return (
@@ -37,8 +54,8 @@ export function CreateGameForm() {
         />
       </label>
       {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
-      <button className="min-h-14 rounded-lg bg-red-600 px-5 text-base font-black uppercase text-white" type="submit">
-        Create Room
+      <button className="min-h-14 rounded-lg bg-red-600 px-5 text-base font-black uppercase text-white disabled:opacity-60" disabled={pending} type="submit">
+        {pending ? "Creating..." : "Create Room"}
       </button>
     </form>
   );
