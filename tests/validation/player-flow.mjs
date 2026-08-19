@@ -42,7 +42,7 @@ async function main() {
   await page.waitForURL("**/room/K7R4Q?player=Vincent&creator=1");
   results.push({
     route: "/room/K7R4Q creator",
-    hasRoomCode: await page.getByText("K7R4Q").isVisible(),
+    hasRoomCode: await page.getByRole("heading", { name: "K7R4Q" }).isVisible(),
     hasPlayerName: await page.getByText("Vincent").first().isVisible(),
     hasCopy: await page.getByRole("button", { name: /Copy|Copied/ }).isVisible(),
     hasShare: await page.getByRole("button", { name: "Share" }).isVisible(),
@@ -87,7 +87,7 @@ async function main() {
   await page.waitForURL("**/room/K7R4Q?player=Robert");
   results.push({
     route: "/room/K7R4Q joiner",
-    hasRoomCode: await page.getByText("K7R4Q").isVisible(),
+    hasRoomCode: await page.getByRole("heading", { name: "K7R4Q" }).isVisible(),
     hasPlayerName: await page.getByText("Robert").first().isVisible(),
     hasReady: await page.getByRole("button", { name: "Ready" }).isVisible(),
     noStartGameForJoiner: (await page.getByText("Start Game").count()) === 0,
