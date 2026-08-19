@@ -19,9 +19,12 @@ export default function Home() {
             >
               Join Game
             </Link>
-            <button className="min-h-14 rounded-lg border border-white/15 bg-white px-5 text-base font-black uppercase text-zinc-950">
+            <Link
+              className="flex min-h-14 items-center justify-center rounded-lg border border-white/15 bg-white px-5 text-base font-black uppercase text-zinc-950"
+              href="/create"
+            >
               Create Game
-            </button>
+            </Link>
           </div>
         </div>
 

@@ -125,7 +125,7 @@ function PhaseIcon({ mood }: { mood: DemoStep["mood"] }) {
   return <Eye className={iconClass} aria-hidden />;
 }
 
-export function PlayerRoundDemo() {
+export function PlayerRoundDemo({ playerName = "Vincent" }: { playerName?: string }) {
   const [step, setStep] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(true);
   const current = steps[step];
@@ -143,7 +143,7 @@ export function PlayerRoundDemo() {
         <header className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-black uppercase text-zinc-400">Player View</p>
-            <h1 className="text-xl font-black uppercase">Vincent</h1>
+            <h1 className="text-xl font-black uppercase">{playerName}</h1>
           </div>
           <div className="rounded-lg bg-emerald-100 px-3 py-2 text-xs font-black uppercase text-emerald-950">Synced</div>
         </header>
