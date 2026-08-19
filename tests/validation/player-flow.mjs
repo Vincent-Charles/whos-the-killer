@@ -53,6 +53,14 @@ async function main() {
     horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth),
   });
 
+  await page.getByRole("button", { name: /Copy|Copied/ }).click();
+  await page.getByRole("button", { name: "Share" }).click();
+  results.push({
+    route: "/room/K7R4Q creator",
+    copyClicked: await page.getByRole("button", { name: "Copied" }).isVisible(),
+    shareClickedWithoutBlocking: await page.getByRole("button", { name: "Share" }).isVisible(),
+  });
+
   await page.getByRole("button", { name: "Ready" }).click();
   results.push({
     route: "/room/K7R4Q creator",
@@ -113,6 +121,13 @@ async function main() {
     leaksModerator: await page.getByText("Moderator").count(),
     leaksRoleBoard: await page.getByText("Raghav: Killer").count(),
     horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth),
+  });
+
+  await page.getByText("Got It").click();
+  await page.getByRole("button", { name: "Replay App Message" }).click();
+  results.push({
+    route: "/demo/full-round",
+    replayMessageClicked: await page.getByText("App Message", { exact: true }).isVisible(),
   });
 
   await page.getByText("Got It").click();
